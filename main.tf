@@ -2,9 +2,9 @@ module "day01" { source = "./day01" }
 output "day01_part1" { value = module.day01.part1 }
 output "day01_part2" { value = module.day01.part2 }
 
-#module "day02" { source = "./day02" }
-#output "day02_part1" { value = module.day02.part1 }
-#output "day02_part2" { value = module.day02.part2 }
+module "day02" { source = "./day02" }
+output "day02_part1" { value = module.day02.part1 }
+output "day02_part2" { value = module.day02.part2 }
 
 #module "day03" { source = "./day03" }
 #output "day03_part1" { value = module.day03.part1 }
