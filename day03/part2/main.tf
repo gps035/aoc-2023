@@ -6,7 +6,7 @@ locals {
   just_numbers   = [
     for row_index in range(length(local.input)) : split(" ", replace(local.input[row_index], "/[^0-9]/", " "))
   ]
-  numbers_with_indexes = flatten([
+  numbers_with_indexes = [
     for row_index in range(length(local.just_numbers)) : [
       for idx in range(length(local.just_numbers[row_index])) : {
         number             = local.just_numbers[row_index][idx]
@@ -15,7 +15,7 @@ locals {
         row_index          = row_index
       } if local.just_numbers[row_index][idx] != ""
     ]
-  ])
+  ]
   characters = [
     for line in local.input : split("", line)
   ]
@@ -29,11 +29,16 @@ locals {
   ]
   adjacent_numbers = [
     for position in flatten(local.potential_gear_indexes_by_line) : [
-      for obj in local.numbers_with_indexes : obj.number
-      if obj.row_index >= position.x - 1 &&
-      obj.row_index <= position.x + 1 &&
-      obj.column_start_index <= position.y + 1 &&
-      obj.column_end_index >= position.y - 1
+      for obj in (
+        position.x == 0 ?
+          concat(local.numbers_with_indexes[position.x], local.numbers_with_indexes[position.x + 1]) :
+          position.x == local.max_row_idx ?
+            concat(local.numbers_with_indexes[position.x - 1], local.numbers_with_indexes[position.x]) :
+            concat(local.numbers_with_indexes[position.x - 1], local.numbers_with_indexes[position.x], local.numbers_with_indexes[position.x + 1])
+      ) :
+        obj.number
+        if obj.column_start_index <= position.y + 1 &&
+        obj.column_end_index >= position.y - 1
     ]
   ]
   gears = [
