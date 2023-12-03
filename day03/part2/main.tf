@@ -29,13 +29,11 @@ locals {
   ]
   adjacent_numbers = [
     for position in flatten(local.potential_gear_indexes_by_line) : [
-      for obj in (
-        position.x == 0 ?
-          concat(local.numbers_with_indexes[position.x], local.numbers_with_indexes[position.x + 1]) :
-          position.x == local.max_row_idx ?
-            concat(local.numbers_with_indexes[position.x - 1], local.numbers_with_indexes[position.x]) :
-            concat(local.numbers_with_indexes[position.x - 1], local.numbers_with_indexes[position.x], local.numbers_with_indexes[position.x + 1])
-      ) :
+      for obj in concat(
+          position.x == 0 ? [] : local.numbers_with_indexes[position.x - 1],
+          local.numbers_with_indexes[position.x],
+          position.x == local.max_row_idx ? [] : local.numbers_with_indexes[position.x + 1]
+      ):
         obj.number
         if obj.column_start_index <= position.y + 1 &&
         obj.column_end_index >= position.y - 1

@@ -18,8 +18,8 @@ locals {
   numbers_with_adjacent_substrings = [
     for obj in flatten(local.numbers_with_indexes) : {
       number = obj.number
-      x      = substr(
-        local.input[obj.row_index == 0 ? 0 : obj.row_index - 1],
+      x = obj.row_index == 0 ? "" : substr(
+        local.input[obj.row_index - 1],
         obj.column_index == 0 ? 0 : obj.column_index - 1,
         length(obj.number) + 2
       )
@@ -28,8 +28,8 @@ locals {
         obj.column_index == 0 ? 0 : obj.column_index - 1,
         length(obj.number) + 2
       )
-      z = substr(
-        local.input[obj.row_index == local.max_row_idx ? local.max_row_idx : obj.row_index + 1],
+      z = obj.row_index == local.max_row_idx ? "" : substr(
+        local.input[obj.row_index + 1],
         obj.column_index == 0 ? 0 : obj.column_index - 1,
         length(obj.number) + 2
       )
